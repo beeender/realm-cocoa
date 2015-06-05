@@ -54,7 +54,7 @@ struct RLMObservationInfo {
     bool returnNil = false;
     // Recorded observers for a standalone RLMObject; unused for persisted objects
     std::vector<RLMRecordedObservation> standaloneObservers;
-    bool currentlyUnregisteringObservers = false;
+    bool skipUnregisteringObservers = false;
 
     RLMObservationInfo(id object);
     RLMObservationInfo(RLMObjectSchema *objectSchema, std::size_t row, id object);
@@ -93,8 +93,6 @@ void for_each(const RLMObservationInfo *info, F&& f) {
 void RLMAdvanceRead(realm::SharedGroup *sg, RLMSchema *schema);
 void RLMRollbackAndContinueAsRead(realm::SharedGroup *sg, RLMSchema *schema);
 void RLMPromoteToWrite(realm::SharedGroup *sg, RLMSchema *schema);
-
-void RLMOverrideStandaloneMethods(Class cls);
 
 // call the given block on each observer of the given row
 void RLMForEachObserver(RLMObjectBase *obj, void (^block)(RLMObjectBase*));
