@@ -530,9 +530,7 @@ void RLMDeleteObjectFromRealm(__unsafe_unretained RLMObjectBase *const object,
 
 void RLMClearTable(RLMObjectSchema *objectSchema) {
     for (auto info : objectSchema->_observedObjects) {
-        for_each(info, [&](__unsafe_unretained auto o) {
-            [o willChangeValueForKey:@"invalidated"];
-        });
+        info->willChange(@"invalidated");
     }
 
     RLMTrackDeletions(objectSchema.realm, ^{
@@ -540,9 +538,7 @@ void RLMClearTable(RLMObjectSchema *objectSchema) {
     });
 
     for (auto info : objectSchema->_observedObjects) {
-        for_each(info, [&](__unsafe_unretained auto o) {
-            [o didChangeValueForKey:@"invalidated"];
-        });
+        info->didChange(@"invalidated");
     }
 
     objectSchema->_observedObjects.clear();
